@@ -1,0 +1,35 @@
+version: 2
+
+project_name: quick-env
+
+builds:
+  - id: qe
+    main: ./cmd/qe
+    binary: qe
+    env: [CGO_ENABLED=0]
+    flags: [-trimpath]
+    ldflags: [-s -w]
+    goos: [linux, darwin]
+    goarch: [amd64, arm64]
+  - id: qenv
+    main: ./cmd/qenv
+    binary: qenv
+    env: [CGO_ENABLED=0]
+    flags: [-trimpath]
+    ldflags: [-s -w]
+    goos: [linux, darwin]
+    goarch: [amd64, arm64]
+
+archives:
+  - ids: [qe, qenv]
+    formats: [tar.gz]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files: [README.md, LICENSE]
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  sort: asc
+  filters:
+    exclude: ["^docs:", "^test:"]
