@@ -187,6 +187,36 @@ usually unlocked when you log in, until you `qenv rm` them.
   gives up after 3 seconds so a new shell never hangs.
   `QENV_KEYCHAIN=/path/to/file.keychain-db` uses a different keychain.
 
+## Why not just…
+
+**`read -s TOKEN; mycli login --token "$TOKEN"`?** That works, and it's the job
+`qe` does for you. With `qe` there's nothing to remember beyond `@`, you see a
+dot per character so you know the paste arrived, you check the masked command
+before it runs, and no `$TOKEN` stays behind in your shell.
+
+**A space in front of the command, so it stays out of history?** That only works
+if your shell is set up for it (`HISTCONTROL=ignorespace` in bash,
+`setopt HIST_IGNORE_SPACE` in zsh), and the token is still on screen and in your
+terminal's scrollback.
+
+**`export TOKEN=…` in your shell profile, or a `.env` file?** Both keep the token
+in plain text on disk, and the profile version hands it to every program you
+start.
+
+**direnv?** It loads variables when you enter a directory. The values usually sit
+in plain text in `.envrc` or `.env`; if you'd rather keep them in the keyring,
+`.envrc` can fetch them with `qenv get`.
+
+**A password manager's CLI, such as 1Password's `op run`?** If you already use
+one, it's the better fit: `op run` also hides secrets in output. `qenv` is for
+when the keyring your system already has is enough.
+
+**envchain?** It's the closest relative of `qenv`: it also keeps variables in the
+Keychain or Secret Service, grouped by namespace, and runs commands with them.
+`qenv` adds masking of captured output, which matters once a coding agent runs
+your commands, ships prebuilt binaries for Linux and macOS, and comes with `qe`
+for one-off secrets.
+
 ## What this protects against
 
 | Risk | Covered |
